@@ -1,0 +1,54 @@
+#!/bin/bash 
+
+username='root'
+passwd='root'
+
+machines=(
+"192.168.1.160"
+"192.168.1.161"
+#"192.168.1.162"
+"192.168.1.163"
+"192.168.1.164"
+#"192.168.1.165"
+"192.168.1.166"
+"192.168.1.167"
+)
+
+function loop() {
+for LINE in ${machines[@]}
+do
+    echo "==================${LINE}=================="
+    sshpass -p ${passwd} ssh ${username}@${LINE} -o StrictHostKeyChecking=no $1 $2 $3 $4 $5 $6 $7 $8 $9
+done
+}
+
+function loop_b() {
+for LINE in ${machines[@]}
+do
+    echo "==================${LINE}=================="
+    sshpass -p ${passwd} ssh ${username}@${LINE} -o StrictHostKeyChecking=no $1 $2 $3 $4 $5 $6 $7 $8 $9&
+done
+}
+
+function scp_each() {
+for LINE in ${machines[@]}
+do
+    echo "==================${LINE}=================="
+    sshpass -p ${passwd} scp -r $1 ${username}@${LINE}:$2
+done
+}
+
+if [ $1 == "loop" ]
+then
+    loop $2 $3 $4 $5 $6 $7 $8 $9
+fi
+
+if [ $1 == "loop_b" ]
+then
+    loop_b $2 $3 $4 $5 $6 $7 $8 $9
+fi
+
+if [ $1 == "scp" ]
+then
+    scp_each $2 $3
+fi
